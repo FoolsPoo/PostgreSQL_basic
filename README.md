@@ -1,1 +1,1 @@
-# PostgreSQL_basic
+# postgresql_basic
