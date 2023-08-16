@@ -17,7 +17,7 @@ CREATE EXTENSION faker SCHEMA faker CASCADE;
 SELECT faker.name();
 ```
 
---
+---
 
 ## command
 
@@ -33,7 +33,7 @@ select faker.faker('th_TH')
 
 อย่างในตัวอย่าง th_TH คือข้อมูลไทยในภาษาไทย หากเราต้องการให้เป็นข้อมูลไทยในภาษาอังกฤษ สามารถพิมว่า en_TH เพื่อเปลี่ยนไปใช้ภาษาอังกฤษแทน
 
---
+---
 
 ## thai id
 
