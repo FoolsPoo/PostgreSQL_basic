@@ -47,4 +47,9 @@ docker exec -it container-id bash
 login เข้า database 
 ```bash 
 psql --host=localhost --port=5432 --user=postgres
+
+```
+or
+```bash
+psql -h localhost -p 5432 -U postgres
 ```
