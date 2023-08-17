@@ -3,15 +3,17 @@ Faker เป็น extension ที่นำมาใช้เพื่อ Maski
 
 แต่ในทางกลับกัน Faker นั้นไม่สามรถนำมาใช้เพื่อปกปิดข้อมูลด้วยการ sensor ได้
 
+---
 
 ## prepare
+
 ลง Extension ภายใน postgresql database โดยใช้คำสั่ง
 ```bash
 CREATE SCHEMA faker;
 
 CREATE EXTENSION faker SCHEMA faker CASCADE;
 ```
-เราสามารถใช้คำสั่งด้านล่างเพื่อเช็คว่า เราลงเสร็จแล้วหรือยัง
+สามารถใช้คำสั่งด้านล่างเพื่อเช็คว่า ลงเสร็จแล้วหรือยัง
 
 ```bash 
 SELECT faker.name();
@@ -37,12 +39,12 @@ select faker.faker('th_TH')
 
 ## thai id
 
-เราสามารถใช้คำสั่ง
+สามารถใช้คำสั่ง
 
 ```bash
 select faker.vat_id();
 ```
 
-ในการสุ่มโดยถูกหลักการได้เลย
+ในการสุ่มเลขประจำตัวบัตรประชาชน โดยถูกหลักการได้ 
 
 
