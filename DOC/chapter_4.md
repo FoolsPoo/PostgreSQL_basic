@@ -156,11 +156,11 @@ SELECT anon.remove_masks_for_all_columns();
 ---
 ## Static Masking
 
-ในที่นี้ จะเป็นการปกปิดข้อมูลโดยการนำข้อมูลเข้าไปแทนที่ข้อมูลต้นฉบับ **โดยที่ข้อมูลต้นฉบับจะหายไปเลย เพราะงั้นวิธีการนี้ควรใช้อย่างระมัดระวัง**
+คือการปกปิดข้อมูลโดยการนำข้อมูลเข้าไปแทนที่ข้อมูลต้นฉบับ **โดยที่ข้อมูลต้นฉบับจะหายไปเลย เพราะงั้นวิธีการนี้ควรใช้อย่างระมัดระวัง**
 
-โดยคำสั่งที่ใช้ในการทำ Static Masking คือ anon.anonymize_database()
+โดยคำสั่งที่ใช้ในการทำ Static Masking คือanon.anonymize_database()
 
-ยกตัวอย่างตารางข้อมูล customer ที่นำมาใช้ทดลองทำ 
+ยกตัวอย่างตารางข้อมูล customer ที่นำมาใช้
 
 ```bash 
  id  |   full_name      |   birth    |    employer   | zipcode | fk_shop
@@ -169,7 +169,7 @@ SELECT anon.remove_masks_for_all_columns();
  112 | David Hasselhoff | 1952-07-17 | Baywatch      | 90001   | 423
 ```
 
-1. เปิดใช้งานตัว Extension โดยใช้คำสั่งตามภาพ
+1. เปิดใช้งาน Extension 
 
 ```bash 
 CREATE EXTENSION IF NOT EXISTS anon CASCADE;
@@ -178,29 +178,35 @@ SELECT anon.init();
 
 2. ใช้งานคำสั่งปกปิดข้อมูล
 
-ด้านล่างเป็นการปกปิดข้อมูลนามสกุลโดยใช้ข้อมูลนามสกุลปลอม
+ปกปิดข้อมูลชื่อ นามสกุลโดยใช้ข้อมูลชื่อ นามสกุลปลอม
 ```bash 
 SECURITY LABEL FOR anon ON COLUMN customer.full_name
 IS 'MASKED WITH FUNCTION anon.fake_first_name() || '' '' || anon.fake_last_name()';
 ```
-ด้านล่างเป็นการปกปิดข้อมูลชื่อบริษัทโดยใช้ข้อมูลชื่อบริษัทปลอม
+ปกปิดข้อมูลชื่อบริษัทโดยใช้ข้อมูลชื่อบริษัทปลอม
 ```bash 
 SECURITY LABEL FOR anon ON COLUMN customer.employer
 IS 'MASKED WITH FUNCTION anon.fake_company()';
 ```
-ด้านล่างเป็นการปกปิดข้อมูลรหัสไปรษณีย์โดยใช้ข้อมูลรหัสไปรษณีย์ปลอม
+ปกปิดข้อมูลรหัสไปรษณีย์โดยใช้ข้อมูลรหัสไปรษณีย์ปลอม
 ```bash 
 SECURITY LABEL FOR anon ON COLUMN customer.zipcode
 IS 'MASKED WITH FUNCTION anon.random_zip()';
 ```
 
-3. แทนที่ข้อมูลต้นฉบับด้วยข้อมูลที่ถูกปกปิดได้โดยใช้คำสั่งนี้
+3. แทนที่ข้อมูลต้นฉบับด้วยข้อมูลที่ถูกปกปิด
 
+```bash
 SELECT anon.anonymize_database();
+```
 
-จากนั้นลองเช็คดูว่าข้อมูลถูกแทนที่ไปหรือยัง 
+5. เช็คข้อมูล
 
+```bash
 SELECT * FROM customer;
+```
+
+จะได้ค่าดังนี้
 
 ```bash 
  id  |  full_name  |   birth    |      employer       | zipcode | fk_shop
