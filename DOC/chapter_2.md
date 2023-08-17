@@ -32,9 +32,7 @@ List All Users: “\du”.
 
 Quit psql: “\q” or "Ctrl+Z".
 
-หรือคุณสามารถดูคำสั่งเพิ่มเติมได้โดยใช้คำสั่ง "\?" ซึ่งคำสั่งนี้จะแสดงคำสั่งที่เราสามารถใช้ได้ใน psql 
-
-โดยหลักๆที่ได้ใช้จะมีดังนี้
+สามารถดูคำสั่งเพิ่มเติมโดยใช้คำสั่ง "\?" 
 
 reference:https://www.commandprompt.com/education/postgresql-basic-psql-commands/
 
