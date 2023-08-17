@@ -275,3 +275,63 @@ SELECT * FROM people;
 
 reference: [LINK](https://postgresql-anonymizer.readthedocs.io/en/stable/declare_masking_rules/#removing-a-masking-rule)
 ---
+
+## Localized fake data
+
+อันนี้เป็นกรณีที่เราอยากจะเปลี่ยนข้อมูลปลอมเดิมเพื่อนำมาใช้กับคำสั่ง anon.fake เพื่อปกปิดข้อมูลใน PostgreSQL เริ่มแรกเราเช็คว่ามีไฟล์ populate.py ใน container หรือไม่
+
+โดยไฟล์ที่เก็บไว้อยู่ใน  /usr/share/postgresql/14/extension/anon/populate.py
+
+กรณีที่ไม่มี สามารถดาวน์โหลดได้ในลิงค์นี้ [LINK](https://gitlab.com/dalibo/postgresql_anonymizer/-/tree/master/python?ref_type=heads) และนำไฟล์ดังกล่าวเข้าไปใน container
+โดยแนะนำว่าให้นำไฟล์เข้าไปในตำแหน่งไฟล์นี้ '/usr/share/postgresql/14/extension/anon/populate.py'
+
+ต่อไปจะมาทดลองการใช้งาน สมมุติว่าเราอยากจะสร้างไฟล์ข้อมูลที่มีชื่อจริงอยู่ 500 ชื่อ ให้ใช้คำสั่งนี้ใน container เลย
+
+```bash 
+$ python3 $(pg_config --sharedir)/extension/anon/populate.py --table first_name \
+                                                             --locales th_TH \
+                                                             --lines 500
+```
+table เป็นการประกาศว่าจะสร้างข้อมูลอะไร
+locales เป็นการประกาศว่าต้องการข้อมูลภาษาอะไรและประเทศอะไร โดยถ้าใช้ภาษาไทย จะเป็น th_TH
+lines เป็นการกำหนดว่าจะสร้างจำนวนข้อมูลในไฟล์เท่าไหร่
+
+หลังใช้คำสั่งแล้ว ระบบจะแสดงข้อมูลชื่อจริง 500 ชื่อ โดยจะมีกำกับลำดับตัวเลขเริ่มตั้งแต่ 0 อันนี้คือเราสามารถสร้างข้อมูลปลอมได้สำเร็จแล้ว
+
+ต่อไปก็มาลองใช้งานใน postgresql วิธีจะมีดังนี้
+
+1. ลบข้อมูลเดิมภายในตาราง anon คอลัมน์ first_name ออกก่อน โดยใช้คำสั่งนี้
+
+```bash 
+TRUNCATE anon.first_name;
+```
+
+2. นำข้อมูลที่สร้างผ่านคำสั่ง python มาคัดลอกลงในตาราง anon คอลัมน์ first_name โดยใช้คำสั่งนี้
+
+```bash
+COPY anon.first_name
+FROM
+PROGRAM 'python3 /usr/share/postgresql/14/extension/anon/populate.py --table first_name --locales th_TH --lines 500';
+```
+
+3. ตั้งค่าลำดับของข้อมูลโดยใช้คำสั่งนี้
+
+```bash
+SELECT setval('anon.first_name_oid_seq', max(oid))
+FROM anon.first_name;
+```
+
+4. จัดลำดับข้อมูลโดยจัดตามเลขลำดับที่อยู่ในข้อมูลโดยใช้คำสั่ง
+
+```bash
+CLUSTER anon.first_name;
+```
+
+ที่นี้เราสามารถทดลองใช้งานคำสั่งปกปิดชื่อจริงเพื่อดูว่าข้อมูลที่นำเข้าไปนั้นขึ้นมาปกปิดข้อมูลให้หรือไม่
+
+```bash
+SECURITY LABEL FOR anon ON COLUMN customer.first_name
+IS 'MASKED WITH FUNCTION anon.fake_first_name()';
+```
+
+---
