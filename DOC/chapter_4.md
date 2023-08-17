@@ -219,9 +219,7 @@ SELECT * FROM customer;
 
 ## Dynamic Masking
 
-ในที่นี้ จะเป็นการใช้งาน Data Masking ปิดบังข้อมูลกับผู้ใช้อื่นที่เราไม่ต้องการให้เขารู้ วิธีการนั้นมีดังนี้
-
-ref: [LINK](https://postgresql-anonymizer.readthedocs.io/en/stable/declare_masking_rules/#removing-a-masking-rule)
+เป็นการใช้งาน Data Masking ปิดบังข้อมูลกับผู้ใช้อื่นที่เราไม่ต้องการให้รู้ 
 
 ```bash 
  id | firstname | lastname |   phone
@@ -230,7 +228,7 @@ ref: [LINK](https://postgresql-anonymizer.readthedocs.io/en/stable/declare_maski
 (1 row)
 ```
 
-1. เปิดใช้งาน Dynamic Data Masking Engine โดยใช้ 2 คำสั่งนี้
+1. เปิดใช้งาน Dynamic Data Masking Engine 
 
 ```bash 
 CREATE EXTENSION IF NOT EXISTS anon CASCADE;
@@ -239,7 +237,7 @@ CREATE EXTENSION IF NOT EXISTS anon CASCADE;
 SELECT anon.start_dynamic_masking();
 ```
 
-2. สร้างผู้ใช้ใหม่ขึ้นมา จากนั้นเราสามารถใส่คำสั่งตามคำสั่งที่ 2 เพื่อให้ผู้ใช้คนนั้นเห็นข้อมูลในสภาพที่ถูกปิดบังได้
+2. สร้างผู้ใช้ใหม่ และใส่คำสั่ง เพื่อให้ผู้ใช้นั้นเห็นข้อมูลในสภาพที่ถูกปิดบังแล้ว
 
 ```bash 
 CREATE ROLE skynet LOGIN;
@@ -250,18 +248,19 @@ SECURITY LABEL FOR anon ON ROLE skynet IS 'MASKED';
 
 3. ทดลองใช้คำสั่งปิดบังข้อมูลตัวอย่าง
 
-ด้านล่างเป็นการปกปิดข้อมูลชื่อโดยใช้ข้อมูลนามสกุลปลอมแบบสุ่ม
+ทดลองการปกปิดข้อมูลชื่อโดยใช้ข้อมูลนามสกุลปลอมแบบสุ่ม
 ```bash 
 SECURITY LABEL FOR anon ON COLUMN people.name
 IS 'MASKED WITH FUNCTION anon.random_last_name()';
 ```
-ด้านล่างเป็นการปกปิดข้อมูลเบอร์มือถือโดยใช้ตัว ******* ปิดข้อมูลให้เหลือแต่ 2 ตัวหน้าและ 2 ตัวหลังไว้
+ด้านล่างเป็นการปกปิดข้อมูลเบอร์มือถือโดยใช้ตัว * ปิดข้อมูลให้เหลือ 2 ตัวหน้าและ 2 ตัวหลัง
+
 ```bash 
 SECURITY LABEL FOR anon ON COLUMN people.phone
 IS 'MASKED WITH FUNCTION anon.partial(phone,2,$$******$$,2)';
 ```
 
-4. จากนั้นลองมาดูข้อมูลในฐานะ skynet จะเห็นได้ว่าข้อมูลถูกปิดปิดในผู้ใช้ skynet แล้ว
+4. ดูข้อมูลในฐานะ skynet 
 
 ```bash 
 \c - skynet
@@ -274,4 +273,5 @@ SELECT * FROM people;
 (1 row)
 ```
 
+reference: [LINK](https://postgresql-anonymizer.readthedocs.io/en/stable/declare_masking_rules/#removing-a-masking-rule)
 ---
