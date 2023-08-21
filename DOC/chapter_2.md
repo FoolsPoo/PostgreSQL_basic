@@ -4,10 +4,9 @@
 
 ## Course Overview
 
-- [Percona Data Masking Tutorial](#percona-data-masking-tutorial)
-    - [Concept](#concept)
-    - [Data Masking Technique](#data-masking-technique)
-    - [Docker](#docker)
+- [Prepare](#Prepare)
+    - [Basic Command](#Basic-Command)
+
 ---
 
 ## Basic Command
