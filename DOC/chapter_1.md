@@ -4,9 +4,8 @@
 
 ## Course Overview
 
-- [Percona Data Masking Tutorial](#percona-data-masking-tutorial)
+- [Postgresql Turorial](#Postgresql-Data-Masking-Tutorial)
     - [Concept](#concept)
-    - [Data Masking Technique](#data-masking-technique)
     - [Docker](#docker)
 ---
 
